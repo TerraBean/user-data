@@ -30,6 +30,10 @@ app.get('/', (req, res) =>{
   res.send('Hello World');
 })
 
+app.get('/test', (req, res) =>{
+  res.send('Hello Test');
+})
+
 // Registration route
 app.post('/register', async (req, res) => {
   const { username, password } = req.body;
