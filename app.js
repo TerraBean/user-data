@@ -26,6 +26,10 @@ const pool = new Client({
   }
 })();
 
+app.get('/', (req, res) =>{
+  res.send('Hello World');
+})
+
 // Registration route
 app.post('/register', async (req, res) => {
   const { username, password } = req.body;
