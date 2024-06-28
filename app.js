@@ -111,6 +111,29 @@ app.post('/timeentry', async (req, res) => {
 });
 
 
+app.post('/admin', async (req, res) => {
+  const { username, password } = req.body;
+
+  // Check for missing fields
+  if (!username || !password) {
+    return res.status(400).json({ message: 'Missing required fields' });
+  }
+
+  // Hash password before storing
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  try {
+    // Insert the new admin into the database
+    const client = await pool.query('INSERT INTO admin (username, password) VALUES ($1, $2)', [username, hashedPassword]);
+
+    console.log('Admin inserted successfully');
+    res.status(201).json({ message: 'Admin created successfully' });
+  } catch (error) {
+    console.error('Error creating admin:', error);
+    res.status(500).json({ message: 'Failed to create admin' });
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
