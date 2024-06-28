@@ -111,7 +111,7 @@ app.post('/timeentry', async (req, res) => {
 });
 
 
-app.post('/admin', async (req, res) => {
+app.post('/register-admin', async (req, res) => {
   const { username, password } = req.body;
 
   // Check for missing fields
