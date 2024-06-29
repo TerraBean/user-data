@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt'); // for password hashing
 const dotenv = require('dotenv');
@@ -6,8 +7,11 @@ const { Client } = require('pg'); // Using pg for PostgreSQL
 
 dotenv.config();
 
+
 const app = express();
+app.use(cors());
 app.use(bodyParser.json());
+
 const port = process.env.PORT || 3000;
 
 // Create a connection pool using the PostgreSQL connection string from .env
