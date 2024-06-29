@@ -134,6 +134,44 @@ app.post('/register-admin', async (req, res) => {
   }
 });
 
+// ... (rest of your code)
+
+// Admin Login route
+app.post('/admin/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  // Check for missing fields
+  if (!username || !password) {
+    return res.status(400).json({ message: 'Missing required fields' });
+  }
+
+  try {
+    // Query the database for the admin
+    const client = await pool.query('SELECT * FROM admin WHERE username = $1', [username]);
+    const foundAdmin = client.rows[0];
+
+    if (!foundAdmin) {
+      return res.status(401).json({ message: 'Invalid username or password' });
+    }
+
+    // Compare the provided password with the hashed password in the database
+    const match = await bcrypt.compare(password, foundAdmin.password);
+
+    if (!match) {
+      return res.status(401).json({ message: 'Invalid username or password' });
+    }
+
+    // If the credentials are valid, send a success response
+    res.status(200).json({ message: 'Admin login successful', adminId: foundAdmin.id, admin: foundAdmin });
+  } catch (error) {
+    console.error('Error logging in admin:', error);
+    res.status(500).json({ message: 'Failed to login admin.' });
+  }
+});
+
+// ... (rest of your code)
+
+
 app.post('/coordinates', async (req, res) => {
   const { adminid, longitude, latitude, radius } = req.body;
 
