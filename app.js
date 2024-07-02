@@ -166,7 +166,7 @@ app.post('/admin/login', async (req, res) => {
     }
 
     // If the credentials are valid, send a success response
-    res.status(200).json({ message: 'Admin login successful', adminId: foundAdmin.id, admin: foundAdmin });
+    res.status(200).json({ message: 'Admin login successful', userId: foundAdmin.id, user: foundAdmin });
   } catch (error) {
     console.error('Error logging in admin:', error);
     res.status(500).json({ message: 'Failed to login admin.' });
