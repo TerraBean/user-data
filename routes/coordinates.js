@@ -1,23 +1,10 @@
 const express = require('express');
-const { Client } = require('pg');
 const dotenv = require('dotenv');
+const pool = require('./db');
+
 dotenv.config();
 
 const router = express.Router();
-const pool = new Client({
-  connectionString: process.env.DATABASE_URL,
-});
-
-// Connect to the database pool (optional, consider connecting at startup)
-(async () => {
-  try {
-    await pool.connect();
-    console.log('Connected to PostgreSQL database');
-  } catch (error) {
-    console.error('Connection error:', error);
-    process.exit(1); // Exit on connection failure
-  }
-})();
 
 router.post('/', async (req, res) => {
   const { adminid, longitude, latitude, radius } = req.body;

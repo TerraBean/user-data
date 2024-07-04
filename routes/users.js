@@ -1,24 +1,24 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-const { Client } = require('pg');
 const dotenv = require('dotenv');
+const pool = require('./db');
+
 dotenv.config();
 
 const router = express.Router();
-const pool = new Client({
-  connectionString: process.env.DATABASE_URL,
+
+// fetch users
+router.get('/', async (req, res) => {
+  try {
+    const client = await pool.query('SELECT * FROM Users');
+    const users = client.rows;
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ message: 'Failed to fetch users' });
+  }
 });
 
-// Connect to the database pool (optional, consider connecting at startup)
-(async () => {
-  try {
-    await pool.connect();
-    console.log('Connected to PostgreSQL database');
-  } catch (error) {
-    console.error('Connection error:', error);
-    process.exit(1); // Exit on connection failure
-  }
-})();
 
 // Registration route
 router.post('/register', async (req, res) => {
@@ -74,3 +74,6 @@ router.post('/login', async (req, res) => {
 });
 
 module.exports = router;
+
+
+
