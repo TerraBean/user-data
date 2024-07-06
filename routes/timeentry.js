@@ -7,7 +7,27 @@ dotenv.config();
 const router = express.Router();
 
 
-router.post('/', async (req, res) => {
+// get all time entries based on current date
+
+router.get('/', async (req, res) => {
+  const today = new Date();
+  const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59, 999);
+
+  try {
+    const client = await pool.query(
+      'SELECT * FROM attendance WHERE clocked_in >= $1 AND clocked_in <= $2',
+      [startOfDay, endOfDay]
+    );
+    const timeEntries = client.rows;
+    res.json(timeEntries);
+  } catch (error) {
+    console.error('Error fetching time entries:', error);
+    res.status(500).json({ message: 'Failed to fetch time entries' });
+  }
+});
+
+router.post('/record-time', async (req, res) => {
   const { userId } = req.body; // Assuming you're passing the user ID in the request body
 
   // Check for missing fields
