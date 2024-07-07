@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
       [startOfDay, endOfDay]
     );
     const timeEntries = client.rows;
-    res.json(timeEntries);
+    res.status(200).json(timeEntries);
   } catch (error) {
     console.error('Error fetching time entries:', error);
     res.status(500).json({ message: 'Failed to fetch time entries' });
